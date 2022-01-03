@@ -6,7 +6,7 @@ import theme from "../../Theme";
 import Title from "../Title";
 import Row from "./Row";
 
-function AdminList({ data }) {
+function AdminList({ data, handleSignOut }) {
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -25,7 +25,7 @@ function AdminList({ data }) {
             />
           )} */}
 
-            <Navigator choose="adminList" />
+            <Navigator choose="adminList" handleSignOut={handleSignOut} />
           </Box>
           <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
             <Header />

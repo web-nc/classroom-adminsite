@@ -15,6 +15,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import LogoutIcon from '@mui/icons-material/Logout';
 import * as React from "react";
 import { Link } from "react-router-dom";
 
@@ -33,12 +34,16 @@ const itemCategory = {
   px: 3,
 };
 
-export default function Navigator({ choose }) {
+export default function Navigator({ choose, handleSignOut }) {
   const [openSubAdmin, setOpenSubAdmin] = React.useState(
     choose === "adminList" || choose === "add"
   );
   const [openSubUser, setOpenSubUser] = React.useState(false);
   const [openSubClass, setOpenSubClass] = React.useState(false);
+
+  const handleLogOut = () => {
+    handleSignOut();
+  }
 
   return (
     <Drawer
@@ -155,6 +160,14 @@ export default function Navigator({ choose }) {
           </Collapse>
 
           <Divider sx={{ mt: 2 }} />
+
+          <ListItem sx={{ ...item, ...itemCategory, cursor: "pointer" }} onClick={handleLogOut}>
+            <ListItemIcon>
+              <LogoutIcon />
+            </ListItemIcon>
+            <ListItemText primary="Đăng xuất" />            
+          </ListItem>
+
         </Box>
       </List>
     </Drawer>

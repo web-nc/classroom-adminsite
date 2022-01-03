@@ -19,6 +19,7 @@ import adminRouter from "./components/admin/admin.route.js";
 import authRouter from "./components/auth/auth.route.js";
 import userRouter from "./components/user/user.route.js";
 import courseRouter from "./components/course/course.route.js";
+import insert from "./insert.js";
 
 const app = express();
 
@@ -68,6 +69,9 @@ app.use("/course", passport.authenticate("jwt", { session: false }), courseRoute
 app.use(function (req, res, next) {
   next(createError(404));
 });
+
+// Add the first admin user
+//insert();
 
 // error handler
 app.use(function (err, req, res, next) {

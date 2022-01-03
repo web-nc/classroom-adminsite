@@ -19,7 +19,10 @@ const User = new mongoose.Schema({
   },
   changePasswordToken: String,
   createdDate: Date,
-  isBanned: Boolean,
+  isBanned: {
+    type: Boolean,
+    default: false
+  },
 });
 
 export default mongoose.model("user", User, "user");

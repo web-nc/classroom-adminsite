@@ -76,7 +76,7 @@ export default function QuickFilteringGrid({ data }) {
       hide: true,
     },
     {
-      field: "adminEmail",
+      field: "email",
       headerName: "Email",
       flex: 1,
       minWidth: 250,
@@ -85,7 +85,7 @@ export default function QuickFilteringGrid({ data }) {
       disableColumnMenu: true,
     },
     {
-      field: "adminName",
+      field: "fullname",
       headerName: "Họ tên",
       minWidth: 250,
       flex: 0.3,
@@ -94,7 +94,7 @@ export default function QuickFilteringGrid({ data }) {
       disableColumnMenu: true,
     },
     {
-      field: "adminGender",
+      field: "gender",
       headerName: "Giới tính",
       width: 200,
       align: "center",
@@ -102,7 +102,7 @@ export default function QuickFilteringGrid({ data }) {
       disableColumnMenu: true,
     },
     {
-      field: "adminCreatedDate",
+      field: "createdDate",
       headerName: "Ngày tạo",
       width: 220,
       align: "center",
@@ -156,6 +156,7 @@ export default function QuickFilteringGrid({ data }) {
               clearSearch: () => requestSearch(""),
             },
           }}
+          getRowId={(row) => row._id}
         />
       </Box>
       <AdminDetail

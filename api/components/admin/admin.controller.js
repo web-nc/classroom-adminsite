@@ -26,9 +26,19 @@ export default {
   },
 
   // get all administrator accounts sorted by date
-  getAdmins: async (req, res) => {
-    const admins = await Admin.find().sort({ createdDate: 1 });
-    return res.status(200).json(admins);
+  getAdmins: (req, res) => {
+    Admin.find()
+      .sort({ createdDate: 1 })
+      .lean()
+      .exec((err, admins) => {
+        if (err) return res.status(500).json(err);
+
+        admins = admins.map((admin) => {
+          admin.fullname = admin.firstname + " " + admin.lastname;
+          return admin;
+        });
+        return res.status(200).json(admins);
+      });
   },
 
   createAdmin: async (req, res) => {

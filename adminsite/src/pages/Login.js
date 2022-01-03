@@ -4,9 +4,8 @@ import React from "react";
 import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import LoginForm from "../components/Auth/LoginForm";
-import SocialLogin from "../components/Auth/SocialLogin";
 
-function Login() {
+function Login({ handleSignIn }) {
   const paperStyle = {
     padding: 20,
     height: "70vh",
@@ -34,9 +33,8 @@ function Login() {
           </Avatar>
           <h2>Đăng nhập</h2>
         </Grid>
-        <SocialLogin />
         <Divider sx={{ my: 2 }}></Divider>
-        <LoginForm />
+        <LoginForm handleSignIn={handleSignIn} />
         <Typography>
           {" "}
           Chưa có tài khoản?

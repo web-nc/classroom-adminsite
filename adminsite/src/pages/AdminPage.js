@@ -1,37 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import AdminList from "../components/ManageAdmin/AdminList";
 import CreateAdmin from "../components/ManageAdmin/CreateAdmin";
+import { getAdminAccounts } from "../services/admin";
 
-function AdminPage() {
-  const [data, setData] = useState([
-    {
-      id: 1,
-      adminEmail: "truongvukt2000@gmail.com",
-      adminName: "Vu Luu Truong",
-      adminGender: "Nam",
-      adminCreatedDate: "2021-12-10",
-    },
-    {
-      id: 2,
-      adminEmail: "haruharu123@gmail.com",
-      adminName: "Ha Ha",
-      adminGender: "Nữ",
-      adminCreatedDate: "2021-12-20",
-    },
-  ]);
+function AdminPage({ handleSignOut }) {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    getAdminAccounts()
+      .then((res) => {
+        if (res.status === 200 && isMounted) setData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const addAdminData = (admin) => {
-    const newData = [...data, admin];
-    setData(newData);
+    setData((prevState) => [...prevState, admin]);
   };
 
   return (
     <Routes>
-      <Route path="/" element={<AdminList data={data} />} />
+      <Route path="home" element={<AdminList data={data} handleSignOut={handleSignOut} />} />
       <Route
-        path="/create"
-        element={<CreateAdmin data={data} addAdminData={addAdminData} />}
+        path="create"
+        element={<CreateAdmin data={data} addAdminData={addAdminData} handleSignOut={handleSignOut} />}
       />
     </Routes>
   );

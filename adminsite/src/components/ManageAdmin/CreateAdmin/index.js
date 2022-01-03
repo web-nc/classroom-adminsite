@@ -6,7 +6,7 @@ import theme from "../../Theme";
 import Title from "../Title";
 import AddAdmin from "./AddAdmin";
 
-function CreateAdmin({ addAdminData, data }) {
+function CreateAdmin({ addAdminData, data, handleSignOut }) {
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: "flex", minHeight: "100vh" }}>
@@ -21,7 +21,7 @@ function CreateAdmin({ addAdminData, data }) {
             />
           )} */}
 
-          <Navigator choose="add" />
+          <Navigator choose="add" handleSignOut={handleSignOut} />
         </Box>
         <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
           <Header />
