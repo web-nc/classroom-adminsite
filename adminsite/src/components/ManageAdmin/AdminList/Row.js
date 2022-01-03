@@ -7,6 +7,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import PropTypes from "prop-types";
 import * as React from "react";
 import AdminDetail from "./AdminDetail";
+import dateFormat from "dateformat";
 
 function escapeRegExp(value) {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
@@ -22,8 +23,7 @@ function QuickSearchToolbar(props) {
         display: "flex",
         alignItems: "flex-start",
         flexWrap: "wrap",
-      }}
-    >
+      }}>
       <TextField
         variant="standard"
         value={props.value}
@@ -38,8 +38,7 @@ function QuickSearchToolbar(props) {
               aria-label="Clear"
               size="small"
               style={{ visibility: props.value ? "visible" : "hidden" }}
-              onClick={props.clearSearch}
-            >
+              onClick={props.clearSearch}>
               <ClearIcon fontSize="small" />
             </IconButton>
           ),
@@ -67,49 +66,78 @@ QuickSearchToolbar.propTypes = {
   value: PropTypes.string.isRequired,
 };
 
+const getFullName = (params) => {
+  return `${params.row.firstname || ""} ${params.row.lastname || ""}`;
+}
+
+const dateFormatter = (params) => {
+  const date = new Date(params.value);
+  return dateFormat(date, "mmm dS, yyyy, hh:MM:ss TT");
+}
+
+const columns = [
+  {
+    field: "id",
+    hide: true,
+  },
+  {
+    field: "email",
+    headerName: "Email",
+    flex: 1,
+    minWidth: 250,
+    align: "center",
+    headerAlign: "center",
+    disableColumnMenu: true,
+  },
+  {
+    field: "fullname",
+    headerName: "Họ tên",
+    minWidth: 250,
+    flex: 0.3,
+    align: "center",
+    headerAlign: "center",
+    disableColumnMenu: true,
+    valueGetter: getFullName,
+  },
+  {
+    field: "firstname",
+    headerName: "Tên",
+    flex: 0.3,
+    align: "center",
+    headerAlign: "center",
+    disableColumnMenu: true,
+    hide: true,
+  },
+  {
+    field: "lastname",
+    headerName: "Họ",
+    flex: 0.3,
+    align: "center",
+    headerAlign: "center",
+    disableColumnMenu: true,
+    hide: true,
+  },
+  {
+    field: "gender",
+    headerName: "Giới tính",
+    width: 200,
+    align: "center",
+    headerAlign: "center",
+    disableColumnMenu: true,
+  },
+  {
+    field: "createdDate",
+    headerName: "Ngày tạo",
+    width: 220,
+    align: "center",
+    headerAlign: "center",
+    disableColumnMenu: true,
+    valueFormatter: dateFormatter,
+  },
+];
+
 export default function QuickFilteringGrid({ data }) {
   const [isAddingOpen, setIsAddingOpen] = React.useState(false);
-
-  const columns = [
-    {
-      field: "id",
-      hide: true,
-    },
-    {
-      field: "email",
-      headerName: "Email",
-      flex: 1,
-      minWidth: 250,
-      align: "center",
-      headerAlign: "center",
-      disableColumnMenu: true,
-    },
-    {
-      field: "fullname",
-      headerName: "Họ tên",
-      minWidth: 250,
-      flex: 0.3,
-      align: "center",
-      headerAlign: "center",
-      disableColumnMenu: true,
-    },
-    {
-      field: "gender",
-      headerName: "Giới tính",
-      width: 200,
-      align: "center",
-      headerAlign: "center",
-      disableColumnMenu: true,
-    },
-    {
-      field: "createdDate",
-      headerName: "Ngày tạo",
-      width: 220,
-      align: "center",
-      headerAlign: "center",
-      disableColumnMenu: true,
-    },
-  ];
 
   const [searchText, setSearchText] = React.useState("");
   const [rows, setRows] = React.useState(data);
@@ -134,13 +162,13 @@ export default function QuickFilteringGrid({ data }) {
     <>
       <Box
         sx={{
-          height: 400,
+          minHeight: 600,
+          maxHeight: 700,
           width: "95%",
           margin: "2.5%",
           boxShadow: "0 0 1px",
           borderRadius: "5px",
-        }}
-      >
+        }}>
         <DataGrid
           components={{ Toolbar: QuickSearchToolbar }}
           rows={rows}

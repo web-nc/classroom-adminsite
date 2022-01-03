@@ -69,8 +69,6 @@ export default function Navigator({ choose, handleSignOut }) {
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton
-              component={Link}
-              to="/"
               selected={choose === "adminList" || choose === "add"}
               sx={item}
               onClick={() => setOpenSubAdmin(!openSubAdmin)}

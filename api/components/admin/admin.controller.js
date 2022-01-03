@@ -33,10 +33,6 @@ export default {
       .exec((err, admins) => {
         if (err) return res.status(500).json(err);
 
-        admins = admins.map((admin) => {
-          admin.fullname = admin.firstname + " " + admin.lastname;
-          return admin;
-        });
         return res.status(200).json(admins);
       });
   },
@@ -56,8 +52,9 @@ export default {
         gender: req.body.gender ? req.body.gender : "Khác",
         createdDate: new Date(),
       });
-      newUser.save();
-      return res.status(200).json({ message: "Tạo tài khoản quản trị thành công" });
+      await newUser.save();
+      delete newUser.password;
+      return res.status(200).json({ message: "Tạo tài khoản quản trị thành công", newAdmin: newUser });
     }
   },
 };

@@ -10,11 +10,13 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
+import { toast } from "react-toastify";
+import { addAdmin } from "../../../services/admin";
 
 const theme = createTheme();
 const genders = ["Nam", "Nữ", "Khác"];
 
-function AddAdmin({ addAdminData, data }) {
+function AddAdmin({ addAdminData }) {
   const [gender, setGender] = React.useState("");
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
@@ -22,28 +24,17 @@ function AddAdmin({ addAdminData, data }) {
   const [password, setPassword] = React.useState("");
   const [submit, setSubmit] = React.useState(false);
 
-  const getCurrentDay = () => {
-    const today = new Date();
-    const dd = String(today.getDate()).padStart(2, "0");
-    const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-    const yyyy = today.getFullYear();
-    const currentDay = yyyy + "-" + mm + "-" + dd;
-    return currentDay;
-  };
-
   const handleSubmit = (event) => {
     event.preventDefault();
-    const dataForm = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    const row = {
-      id: data.length + 1,
-      adminName: lastName + " " + firstName,
-      adminGender: dataForm.get("gender"),
-      adminEmail: dataForm.get("email"),
-      adminCreatedDate: getCurrentDay(),
-    };
-    console.log(row);
-    addAdminData(row);
+    // const dataForm = new FormData(event.currentTarget);
+    addAdmin({ email, password, firstname: firstName, lastname: lastName, gender }).then((res) => {
+      if (res.status !== 200) return;
+
+      toast.success(res.data.message);
+      // eslint-disable-next-line no-console
+      const row = res.data.newAdmin;
+      addAdminData(row);
+    });
     setSubmit(!submit);
   };
 
@@ -58,20 +49,14 @@ function AddAdmin({ addAdminData, data }) {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-            }}
-          >
+            }}>
             <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
               <AdminPanelSettingsOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
               Tạo quản trị viên
             </Typography>
-            <Box
-              component="form"
-              noValidate
-              onSubmit={handleSubmit}
-              sx={{ mt: 3 }}
-            >
+            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -109,8 +94,7 @@ function AddAdmin({ addAdminData, data }) {
                     value={gender}
                     onChange={(e) => {
                       setGender(e.target.value);
-                    }}
-                  >
+                    }}>
                     {genders.map((gender, index) => (
                       <MenuItem key={index} value={gender}>
                         {gender}
@@ -144,12 +128,7 @@ function AddAdmin({ addAdminData, data }) {
                   />
                 </Grid>
               </Grid>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
+              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                 Tạo
               </Button>
             </Box>

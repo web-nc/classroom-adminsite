@@ -15,3 +15,7 @@ export function getAdminAccounts() {
 export function getAdmin() {
   return axios.get(API_URL);
 }
+
+export function addAdmin({ email, password, firstname, lastname, gender }) {
+  return axios.post(API_URL + "/newAdmin", { email, password, firstname, lastname, gender });
+}
