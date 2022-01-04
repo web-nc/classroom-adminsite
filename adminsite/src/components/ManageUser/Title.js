@@ -10,15 +10,10 @@ function Title() {
       color="primary"
       position="static"
       elevation={0}
-      sx={{ zIndex: 0, paddingBottom: "1.65rem", paddingLeft: "1.5rem" }}
+      sx={{ zIndex: 0, paddingBottom: "1.65rem", textAlign: "center" }}
     >
-      <Typography
-        color="inherit"
-        variant="h5"
-        component="h1"
-        fontWeight={"bold"}
-      >
-        Quản Lý Quản Trị Viên
+      <Typography color="inherit" variant="h5" component="h1">
+        Quản Lý Người dùng
       </Typography>
     </AppBar>
   );

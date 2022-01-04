@@ -1,8 +1,7 @@
 import PersonSharpIcon from "@mui/icons-material/PersonSharp";
-import { Avatar, Divider, Grid, Paper, Typography } from "@mui/material";
+import { Avatar, Divider, Grid, Paper } from "@mui/material";
 import React from "react";
 import { useLocation } from "react-router";
-import { Link } from "react-router-dom";
 import LoginForm from "../components/Auth/LoginForm";
 
 function Login({ handleSignIn }) {
@@ -21,13 +20,12 @@ function Login({ handleSignIn }) {
   const typoStyle = { marginLeft: "10px" };
 
   const location = useLocation();
-  const from = location.state?.from || '/';
+  const from = location.state?.from || "/";
 
-  
   return (
-    <Grid>
+    <Grid marginTop={"2rem"}>
       <Paper elevation={10} style={paperStyle}>
-        <Grid align="center">
+        <Grid align="center" marginTop={"1.25rem"}>
           <Avatar style={avatarStyle}>
             <PersonSharpIcon style={iconStyle} />
           </Avatar>
@@ -35,18 +33,6 @@ function Login({ handleSignIn }) {
         </Grid>
         <Divider sx={{ my: 2 }}></Divider>
         <LoginForm handleSignIn={handleSignIn} />
-        <Typography>
-          {" "}
-          Chưa có tài khoản?
-          <Link to="/register" state={{ from: from }} style={typoStyle}>
-            Đăng ký
-          </Link>
-        </Typography>
-        <Typography>
-          <Link to="/loginHelping/h" state={{ from: from }}>
-            Quên mật khẩu?
-          </Link>
-        </Typography>
       </Paper>
     </Grid>
   );

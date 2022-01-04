@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Route, Routes, Navigate } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { UnexpectedComponent } from "../pages/404";
@@ -11,7 +11,9 @@ import { logout } from "../services/auth";
 import { AuthRoute, PrivateRoute } from "./Routes";
 
 const token = JSON.parse(localStorage.getItem("token"));
-const initialState = token ? { loggedIn: true, token: token } : { loggedIn: false, token: null };
+const initialState = token
+  ? { loggedIn: true, token: token }
+  : { loggedIn: false, token: null };
 
 export default function MainRoute() {
   const [auth, setAuth] = useState(initialState);
@@ -48,17 +50,29 @@ export default function MainRoute() {
     <div>
       <Routes>
         <Route path="/login" element={<AuthRoute loggedIn={loggedIn} />}>
-          <Route path="/login" element={<Login handleSignIn={handleSignIn} />} />
+          <Route
+            path="/login"
+            element={<Login handleSignIn={handleSignIn} />}
+          />
         </Route>
         <Route path="/" element={<PrivateRoute loggedIn={loggedIn} />}>
-          <Route path="/*" element={<AdminPage handleSignOut={handleSignOut} />} />
+          <Route
+            path="/*"
+            element={<AdminPage handleSignOut={handleSignOut} />}
+          />
           <Route index element={<Navigate to="home" />} />
         </Route>
         <Route path="/user" element={<PrivateRoute loggedIn={loggedIn} />}>
-          <Route path="/user" element={<UserPage />} />
+          <Route
+            path="/user"
+            element={<UserPage handleSignOut={handleSignOut} />}
+          />
         </Route>
         <Route path="/class" element={<PrivateRoute loggedIn={loggedIn} />}>
-          <Route path="/class" element={<ClassPage />} />
+          <Route
+            path="/class"
+            element={<ClassPage handleSignOut={handleSignOut} />}
+          />
         </Route>
         <Route path="/404" element={<UnexpectedComponent />} />
       </Routes>

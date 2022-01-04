@@ -18,7 +18,7 @@ function Title() {
         component="h1"
         fontWeight={"bold"}
       >
-        Quản Lý Quản Trị Viên
+        Quản Lý Lớp Học
       </Typography>
     </AppBar>
   );

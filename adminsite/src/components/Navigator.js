@@ -4,6 +4,7 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import HomeIcon from "@mui/icons-material/Home";
+import LogoutIcon from "@mui/icons-material/Logout";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import { Collapse } from "@mui/material";
@@ -15,7 +16,6 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import LogoutIcon from '@mui/icons-material/Logout';
 import * as React from "react";
 import { Link } from "react-router-dom";
 
@@ -38,12 +38,12 @@ export default function Navigator({ choose, handleSignOut }) {
   const [openSubAdmin, setOpenSubAdmin] = React.useState(
     choose === "adminList" || choose === "add"
   );
-  const [openSubUser, setOpenSubUser] = React.useState(false);
-  const [openSubClass, setOpenSubClass] = React.useState(false);
+  const [openSubUser, setOpenSubUser] = React.useState(choose === "user");
+  const [openSubClass, setOpenSubClass] = React.useState(choose === "class");
 
   const handleLogOut = () => {
     handleSignOut();
-  }
+  };
 
   return (
     <Drawer
@@ -69,6 +69,8 @@ export default function Navigator({ choose, handleSignOut }) {
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton
+              component={Link}
+              to="/"
               selected={choose === "adminList" || choose === "add"}
               sx={item}
               onClick={() => setOpenSubAdmin(!openSubAdmin)}
@@ -123,7 +125,7 @@ export default function Navigator({ choose, handleSignOut }) {
           </ListItem>
           <Collapse in={openSubUser} timeout="auto" unmountOnExit>
             <List disablePadding sx={{ marginLeft: "1rem" }}>
-              <ListItemButton sx={item}>
+              <ListItemButton selected={choose === "user"} sx={item}>
                 <ListItemIcon>
                   <FormatListBulletedIcon />
                 </ListItemIcon>
@@ -148,7 +150,7 @@ export default function Navigator({ choose, handleSignOut }) {
           </ListItem>
           <Collapse in={openSubClass} timeout="auto" unmountOnExit>
             <List disablePadding sx={{ marginLeft: "1rem" }}>
-              <ListItemButton sx={item}>
+              <ListItemButton selected={choose === "class"} sx={item}>
                 <ListItemIcon>
                   <FormatListBulletedIcon />
                 </ListItemIcon>
@@ -159,13 +161,15 @@ export default function Navigator({ choose, handleSignOut }) {
 
           <Divider sx={{ mt: 2 }} />
 
-          <ListItem sx={{ ...item, ...itemCategory, cursor: "pointer" }} onClick={handleLogOut}>
+          <ListItem
+            sx={{ ...item, ...itemCategory, cursor: "pointer" }}
+            onClick={handleLogOut}
+          >
             <ListItemIcon>
               <LogoutIcon />
             </ListItemIcon>
-            <ListItemText primary="Đăng xuất" />            
+            <ListItemText primary="Đăng xuất" />
           </ListItem>
-
         </Box>
       </List>
     </Drawer>

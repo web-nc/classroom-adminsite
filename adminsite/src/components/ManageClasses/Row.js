@@ -7,7 +7,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import format from "date-fns/format";
 import PropTypes from "prop-types";
 import * as React from "react";
-import AdminDetail from "./AdminDetail";
+import ClassDetail from "./ClassDetail";
 
 function escapeRegExp(value) {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
@@ -68,10 +68,6 @@ QuickSearchToolbar.propTypes = {
   value: PropTypes.string.isRequired,
 };
 
-const getFullName = (params) => {
-  return `${params.row.firstname || ""} ${params.row.lastname || ""}`;
-};
-
 const dateFormatter = (params) => {
   const date = new Date(params.value);
   return format(date, "dd/MM/yyyy");
@@ -83,47 +79,35 @@ const columns = [
     hide: true,
   },
   {
-    field: "email",
-    fontWeight: 500,
-    headerName: "Email",
+    field: "name",
+    headerName: "Tên lớp",
     flex: 1,
     minWidth: 250,
     align: "left",
-    headerAlign: "left",
+    headerAlign: "center",
     disableColumnMenu: true,
   },
   {
-    field: "fullname",
-    headerName: "Họ tên",
-    minWidth: 250,
+    field: "owner",
+    headerName: "Người tạo",
     flex: 0.3,
+    minWidth: 180,
     align: "center",
     headerAlign: "center",
     disableColumnMenu: true,
-    valueGetter: getFullName,
   },
   {
-    field: "firstname",
-    headerName: "Tên",
-    flex: 0.3,
+    field: "amountStudent",
+    headerName: "Số sinh viên",
+    width: 120,
     align: "center",
     headerAlign: "center",
     disableColumnMenu: true,
-    hide: true,
   },
   {
-    field: "lastname",
-    headerName: "Họ",
-    flex: 0.3,
-    align: "center",
-    headerAlign: "center",
-    disableColumnMenu: true,
-    hide: true,
-  },
-  {
-    field: "gender",
-    headerName: "Giới tính",
-    width: 200,
+    field: "amountTeacher",
+    headerName: "Số giáo viên",
+    width: 120,
     align: "center",
     headerAlign: "center",
     disableColumnMenu: true,
@@ -144,7 +128,7 @@ export default function QuickFilteringGrid({ data }) {
 
   const [searchText, setSearchText] = React.useState("");
   const [rows, setRows] = React.useState(data);
-  const [adminSelected, setAdminSelected] = React.useState({});
+  const [classSelected, setClassSelected] = React.useState({});
 
   const requestSearch = (searchValue) => {
     setSearchText(searchValue);
@@ -178,7 +162,7 @@ export default function QuickFilteringGrid({ data }) {
           rows={rows}
           columns={columns}
           onRowClick={(item) => {
-            setAdminSelected(item);
+            setClassSelected(item);
             setIsAddingOpen(!isAddingOpen);
           }}
           componentsProps={{
@@ -191,8 +175,8 @@ export default function QuickFilteringGrid({ data }) {
           getRowId={(row) => row._id}
         />
       </Box>
-      <AdminDetail
-        admin={adminSelected}
+      <ClassDetail
+        classItem={classSelected}
         openDialog={isAddingOpen}
         handleDialogClose={() => setIsAddingOpen(!isAddingOpen)}
       />

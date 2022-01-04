@@ -12,15 +12,6 @@ function CreateAdmin({ addAdminData, data, handleSignOut }) {
       <Box sx={{ display: "flex", minHeight: "100vh" }}>
         <CssBaseline />
         <Box component="nav" sx={{ width: { sm: 256 }, flexShrink: { sm: 0 } }}>
-          {/* {isSmUp ? null : (
-            <Navigator
-              PaperProps={{ style: { width: drawerWidth } }}
-              variant="temporary"
-              open={mobileOpen}
-              onClose={handleDrawerToggle}
-            />
-          )} */}
-
           <Navigator choose="add" handleSignOut={handleSignOut} />
         </Box>
         <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>

@@ -1,4 +1,3 @@
-import bcrypt from "bcryptjs";
 import User from "./user.model.js";
 export default {
   getUser: (req, res) => {
@@ -17,8 +16,14 @@ export default {
   },
 
   getUsers: (req, res) => {
-    const users = User.find().sort({ createdDate: 1 });
-    return res.status(200).json(users);
+    User.find()
+      .sort({ createdDate: 1 })
+      .lean()
+      .exec((err, users) => {
+        if (err) return res.status(500).json(err);
+
+        return res.status(200).json(users);
+      });
   },
 
   banUser: (req, res) => {
