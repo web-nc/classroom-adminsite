@@ -6,7 +6,7 @@ import theme from "../Theme";
 import Row from "./Row";
 import Title from "./Title";
 
-function ClassList({ data, handleSignOut }) {
+function ClassList({ data, handleSignOut, handleRemoveData }) {
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -30,7 +30,7 @@ function ClassList({ data, handleSignOut }) {
           <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
             <Header />
             <Title />
-            <Row data={data} />
+            <Row data={data} handleRemoveData={handleRemoveData} />
           </Box>
         </Box>
       </ThemeProvider>
