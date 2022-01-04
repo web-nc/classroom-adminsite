@@ -4,7 +4,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  TextField,
+  Typography,
 } from "@mui/material";
 import format from "date-fns/format";
 import React from "react";
@@ -30,50 +30,22 @@ function AdminDetail({ openDialog, handleDialogClose, admin }) {
     <Dialog open={openDialog} onClose={handleClose}>
       <DialogTitle sx={{ textAlign: "center" }}>Thông tin chi tiết</DialogTitle>
       <DialogContent>
-        <TextField
-          autoFocus
-          margin="dense"
-          id="email"
-          label="Email"
-          type="text"
-          fullWidth
-          variant="outlined"
-          name="email"
-          value={email}
-        />
-        <TextField
-          autoFocus
-          margin="dense"
-          id="name"
-          label="Họ tên"
-          type="text"
-          fullWidth
-          variant="outlined"
-          name="name"
-          value={name}
-        />
-        <TextField
-          autoFocus
-          margin="dense"
-          id="gender"
-          label="Giới tính"
-          type="text"
-          fullWidth
-          variant="outlined"
-          name="gender"
-          value={gender}
-        />
-        <TextField
-          autoFocus
-          margin="dense"
-          id="createdDate"
-          label="Ngày tạo"
-          type="text"
-          fullWidth
-          variant="outlined"
-          name="createdDate"
-          value={createdDate}
-        />
+        <Typography sx={{ marginBottom: "0.25rem" }}>
+          <strong style={{ textDecoration: "underline" }}>Email: </strong>
+          {email}
+        </Typography>
+        <Typography sx={{ marginBottom: "0.25rem" }}>
+          <strong style={{ textDecoration: "underline" }}>Họ tên: </strong>
+          {name}
+        </Typography>
+        <Typography sx={{ marginBottom: "0.25rem" }}>
+          <strong style={{ textDecoration: "underline" }}>Giới tính: </strong>
+          {gender}
+        </Typography>
+        <Typography sx={{ marginBottom: "0.25rem" }}>
+          <strong style={{ textDecoration: "underline" }}>Ngày tạo: </strong>
+          {createdDate}
+        </Typography>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Đóng</Button>

@@ -7,6 +7,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import format from "date-fns/format";
 import PropTypes from "prop-types";
 import * as React from "react";
+import { toast } from "react-toastify";
+import { banUser, unbanUser, updateStudentID } from "../../services/user";
 import UserDetail from "./UserDetail";
 
 function escapeRegExp(value) {
@@ -164,6 +166,8 @@ export default function QuickFilteringGrid({ data }) {
   const [searchText, setSearchText] = React.useState("");
   const [rows, setRows] = React.useState(data);
   const [userSelected, setUserSelected] = React.useState({});
+  const [editRowsModel, setEditRowsModel] = React.useState({});
+  const [editRowData, setEditRowData] = React.useState({});
 
   const requestSearch = (searchValue) => {
     setSearchText(searchValue);
@@ -185,6 +189,45 @@ export default function QuickFilteringGrid({ data }) {
     setRows(data);
   }, [data]);
 
+  const handleEditRowsModelChange = React.useCallback(
+    (model) => {
+      const editedIds = Object.keys(model);
+      //userID: console.log(editedIds[0]);
+
+      // user stops editing when the edit model is empty
+      if (editedIds.length === 0) {
+        // console.log(JSON.stringify(editRowData, null, 4));
+        const userID = Object.keys(editRowsModel)[0];
+        console.log(userID);
+        if (typeof editRowData.studentID === "undefined") {
+          if (editRowData.isBanned.value) {
+            banUser(userID).then((res) => {
+              if (res.status !== 200) return;
+              toast.success(res.data.message);
+            });
+          } else {
+            unbanUser(userID).then((res) => {
+              if (res.status !== 200) return;
+              toast.success(res.data.message);
+            });
+          }
+        } else {
+          updateStudentID(userID, editRowData.studentID.value).then((res) => {
+            if (res.status !== 200) return;
+            toast.success(res.data.message);
+          });
+        }
+
+        // update on api
+      } else {
+        setEditRowData(model[editedIds[0]]);
+      }
+
+      setEditRowsModel(model);
+    },
+    [editRowData]
+  );
+
   return (
     <>
       <Box
@@ -201,6 +244,8 @@ export default function QuickFilteringGrid({ data }) {
           components={{ Toolbar: QuickSearchToolbar }}
           rows={rows}
           columns={columns}
+          editRowsModel={editRowsModel}
+          onEditRowsModelChange={handleEditRowsModelChange}
           onCellClick={(params, event) => {
             event.defaultMuiPrevented = true;
             if (params.field === "fullname" || params.field === "email") {

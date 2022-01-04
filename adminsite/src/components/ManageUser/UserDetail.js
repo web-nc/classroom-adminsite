@@ -33,25 +33,41 @@ function UserDetail({ openDialog, handleDialogClose, userSelected }) {
   };
 
   return (
-    <Dialog open={openDialog} onClose={handleClose} fullWidth>
+    <Dialog open={openDialog} onClose={handleClose}>
       <DialogTitle sx={{ textAlign: "center" }}>Thông tin chi tiết</DialogTitle>
       <DialogContent>
-        <Typography>Email:</Typography>
-        <Typography>{email}</Typography>
-        <Typography>Họ tên:</Typography>
-        <Typography>{name}</Typography>
-        <Typography>Giới tính:</Typography>
-        <Typography>{gender}</Typography>
-        <Typography>Mã số sinh viên:</Typography>
-        <Typography>{studentID}</Typography>
-        <Typography>Ngày tạo:</Typography>
-        <Typography>{createdDate}</Typography>
-        <Typography>Tình trạng tài khoản:</Typography>
-        {isBanned ? (
-          <Typography>Bị khóa</Typography>
-        ) : (
-          <Typography>Hoạt động</Typography>
-        )}
+        <Typography sx={{ marginBottom: "0.25rem" }}>
+          <strong style={{ textDecoration: "underline" }}>Email: </strong>
+          {email}
+        </Typography>
+        <Typography sx={{ marginBottom: "0.25rem" }}>
+          <strong style={{ textDecoration: "underline" }}>Họ tên: </strong>
+          {name}
+        </Typography>
+        <Typography sx={{ marginBottom: "0.25rem" }}>
+          <strong style={{ textDecoration: "underline" }}>Giới tính: </strong>
+          {gender}
+        </Typography>
+        <Typography sx={{ marginBottom: "0.25rem" }}>
+          <strong style={{ textDecoration: "underline" }}>
+            Mã số sinh viên:{" "}
+          </strong>
+          {studentID}
+        </Typography>
+        <Typography sx={{ marginBottom: "0.25rem" }}>
+          <strong style={{ textDecoration: "underline" }}>Ngày tạo: </strong>
+          {createdDate}
+        </Typography>
+        <Typography sx={{ marginBottom: "0.25rem" }}>
+          <strong style={{ textDecoration: "underline" }}>
+            Tình trạng tài khoản:{" "}
+          </strong>
+          {isBanned ? (
+            <Typography>Bị khóa</Typography>
+          ) : (
+            <Typography>Hoạt động</Typography>
+          )}
+        </Typography>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Đóng</Button>

@@ -13,5 +13,6 @@ router.put("/unban/:userId", userController.unbanUser);
 
 //TODO:
 //Manually map or unmap the StudentId of an account
+router.put("/updateStudentID/:userId", userController.updateStudentID);
 
 export default router;
