@@ -140,7 +140,7 @@ const columns = [
 ];
 
 export default function QuickFilteringGrid({ data }) {
-  const [isAddingOpen, setIsAddingOpen] = React.useState(false);
+  const [isDetailOpen, setIsDetailOpen] = React.useState(false);
 
   const [searchText, setSearchText] = React.useState("");
   const [rows, setRows] = React.useState(data);
@@ -179,7 +179,7 @@ export default function QuickFilteringGrid({ data }) {
           columns={columns}
           onRowClick={(item) => {
             setAdminSelected(item);
-            setIsAddingOpen(!isAddingOpen);
+            setIsDetailOpen(!isDetailOpen);
           }}
           componentsProps={{
             toolbar: {
@@ -193,8 +193,8 @@ export default function QuickFilteringGrid({ data }) {
       </Box>
       <AdminDetail
         admin={adminSelected}
-        openDialog={isAddingOpen}
-        handleDialogClose={() => setIsAddingOpen(!isAddingOpen)}
+        openDialog={isDetailOpen}
+        handleDialogClose={() => setIsDetailOpen(!isDetailOpen)}
       />
     </>
   );

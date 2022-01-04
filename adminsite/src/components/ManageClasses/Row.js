@@ -124,7 +124,8 @@ const columns = [
 ];
 
 export default function QuickFilteringGrid({ data }) {
-  const [isAddingOpen, setIsAddingOpen] = React.useState(false);
+  const [isDetailOpen, setIsDetailOpen] = React.useState(false);
+  const [isFieldToDetailOpen, setIsFieldToDetailOpen] = React.useState(false);
 
   const [searchText, setSearchText] = React.useState("");
   const [rows, setRows] = React.useState(data);
@@ -139,6 +140,11 @@ export default function QuickFilteringGrid({ data }) {
       });
     });
     setRows(filteredRows);
+  };
+
+  const handleDialogClose = () => {
+    setIsFieldToDetailOpen(false);
+    setIsDetailOpen(!isDetailOpen);
   };
 
   React.useEffect(() => {
@@ -161,9 +167,17 @@ export default function QuickFilteringGrid({ data }) {
           components={{ Toolbar: QuickSearchToolbar }}
           rows={rows}
           columns={columns}
+          onCellClick={(params, event) => {
+            event.defaultMuiPrevented = true;
+            if (params.field === "name") {
+              setIsFieldToDetailOpen(true);
+            }
+          }}
           onRowClick={(item) => {
             setClassSelected(item);
-            setIsAddingOpen(!isAddingOpen);
+            if (isFieldToDetailOpen) {
+              setIsDetailOpen(!isDetailOpen);
+            }
           }}
           componentsProps={{
             toolbar: {
@@ -177,8 +191,8 @@ export default function QuickFilteringGrid({ data }) {
       </Box>
       <ClassDetail
         classItem={classSelected}
-        openDialog={isAddingOpen}
-        handleDialogClose={() => setIsAddingOpen(!isAddingOpen)}
+        openDialog={isDetailOpen}
+        handleDialogClose={handleDialogClose}
       />
     </>
   );

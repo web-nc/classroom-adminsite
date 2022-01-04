@@ -3,9 +3,9 @@ import userController from "./user.controller.js";
 
 const router = express.Router();
 
-router.get("/:id", userController.getUser);
-
 router.get("/getAll", userController.getUsers);
+
+router.get("/:id", userController.getUser);
 
 router.put("/ban/:userId", userController.banUser);
 

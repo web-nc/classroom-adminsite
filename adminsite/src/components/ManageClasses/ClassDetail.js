@@ -18,7 +18,6 @@ function ClassDetail({ openDialog, handleDialogClose, classItem }) {
     teachers = [],
     createdDate = "";
 
-  console.log(classItem);
   if (Object.keys(classItem).length !== 0) {
     owner = classItem.row.owner;
     name = classItem.row.name;
@@ -29,8 +28,6 @@ function ClassDetail({ openDialog, handleDialogClose, classItem }) {
     createdDate = format(new Date(classItem.row.createdDate), "dd/MM/yyyy");
   }
 
-  console.log(details);
-
   const handleClose = () => {
     handleDialogClose();
   };
@@ -39,23 +36,43 @@ function ClassDetail({ openDialog, handleDialogClose, classItem }) {
     <Dialog open={openDialog} onClose={handleClose} fullWidth={true}>
       <DialogTitle sx={{ textAlign: "center" }}>Thông tin chi tiết</DialogTitle>
       <DialogContent>
-        <Typography>Tên lớp:</Typography>
-        <Typography>{name}</Typography>
-        <Typography>Tên viết tắt:</Typography>
-        <Typography>{briefName}</Typography>
-        <Typography>Người tạo:</Typography>
-        <Typography>{owner}</Typography>
-        <Typography>Ngày tạo:</Typography>
-        <Typography>{createdDate}</Typography>
-        <Typography>Chi tiết:</Typography>
+        <Typography sx={{ marginBottom: "0.25rem" }}>
+          <strong style={{ textDecoration: "underline" }}>Tên lớp: </strong>
+          {name}
+        </Typography>
+        <Typography sx={{ marginBottom: "0.25rem" }}>
+          <strong style={{ textDecoration: "underline" }}>
+            Tên viết tắt:{" "}
+          </strong>
+          {briefName}
+        </Typography>
+        <Typography sx={{ marginBottom: "0.25rem" }}>
+          <strong style={{ textDecoration: "underline" }}>Người tạo: </strong>
+          {owner}
+        </Typography>
+        <Typography sx={{ marginBottom: "0.25rem" }}>
+          <strong style={{ textDecoration: "underline" }}>Ngày tạo: </strong>
+          {createdDate}
+        </Typography>
+        <Typography sx={{ marginBottom: "0.25rem" }}>
+          <strong style={{ textDecoration: "underline" }}>Chi tiết:</strong>
+        </Typography>
         <div dangerouslySetInnerHTML={{ __html: details }} />
-        <Typography>Danh sách giáo viên:</Typography>
-        {teachers.map((teacher) => (
-          <Typography>{teacher.name}</Typography>
+        <Typography sx={{ marginBottom: "0.25rem" }}>
+          <strong style={{ textDecoration: "underline" }}>
+            Danh sách giáo viên
+          </strong>
+        </Typography>
+        {teachers.map((teacher, index) => (
+          <Typography key={index}>- {teacher.name}</Typography>
         ))}
-        <Typography>Danh sách sinh viên:</Typography>
-        {students.map((student) => (
-          <Typography>{student.name}</Typography>
+        <Typography sx={{ marginBottom: "0.25rem" }}>
+          <strong style={{ textDecoration: "underline" }}>
+            Danh sách sinh viên
+          </strong>
+        </Typography>
+        {students.map((student, index) => (
+          <Typography key={index}>- {student.name}</Typography>
         ))}
       </DialogContent>
       <DialogActions>

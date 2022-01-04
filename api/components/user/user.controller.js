@@ -2,6 +2,7 @@ import User from "./user.model.js";
 export default {
   getUser: (req, res) => {
     const userId = req.params.id;
+    console.log("user");
     // Check id legit
     if (!userId.match(/^[0-9a-fA-F]{24}$/)) {
       return res.status(202).json({ message: `ID không hợp lệ` });
@@ -21,7 +22,6 @@ export default {
       .lean()
       .exec((err, users) => {
         if (err) return res.status(500).json(err);
-
         return res.status(200).json(users);
       });
   },

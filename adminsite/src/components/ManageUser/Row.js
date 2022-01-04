@@ -7,7 +7,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import format from "date-fns/format";
 import PropTypes from "prop-types";
 import * as React from "react";
-import AdminDetail from "./AdminDetail";
+import UserDetail from "./UserDetail";
 
 function escapeRegExp(value) {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
@@ -86,15 +86,15 @@ const columns = [
     field: "email",
     headerName: "Email",
     flex: 1,
-    minWidth: 250,
-    align: "center",
-    headerAlign: "center",
+    minWidth: 200,
+    align: "left",
+    headerAlign: "left",
     disableColumnMenu: true,
   },
   {
     field: "fullname",
     headerName: "Họ tên",
-    minWidth: 150,
+    minWidth: 120,
     flex: 0.3,
     align: "center",
     headerAlign: "center",
@@ -122,7 +122,7 @@ const columns = [
   {
     field: "gender",
     headerName: "Giới tính",
-    width: 110,
+    width: 115,
     align: "center",
     headerAlign: "center",
     disableColumnMenu: true,
@@ -130,15 +130,16 @@ const columns = [
   {
     field: "studentID",
     headerName: "MSSV",
-    width: 110,
+    width: 115,
     align: "center",
     headerAlign: "center",
+    editable: true,
     disableColumnMenu: true,
   },
   {
     field: "createdDate",
     headerName: "Ngày tạo",
-    width: 180,
+    width: 115,
     align: "center",
     headerAlign: "center",
     disableColumnMenu: true,
@@ -146,20 +147,23 @@ const columns = [
   },
   {
     field: "isBanned",
-    headerName: "Khóa tài khoản",
-    width: 150,
+    headerName: "Bị khóa",
+    width: 115,
     align: "center",
     headerAlign: "center",
+    editable: true,
     disableColumnMenu: true,
+    type: "boolean",
   },
 ];
 
 export default function QuickFilteringGrid({ data }) {
-  const [isAddingOpen, setIsAddingOpen] = React.useState(false);
+  const [isDetailOpen, setIsDetailOpen] = React.useState(false);
+  const [isFieldToDetailOpen, setIsFieldToDetailOpen] = React.useState(false);
 
   const [searchText, setSearchText] = React.useState("");
   const [rows, setRows] = React.useState(data);
-  const [adminSelected, setAdminSelected] = React.useState({});
+  const [userSelected, setUserSelected] = React.useState({});
 
   const requestSearch = (searchValue) => {
     setSearchText(searchValue);
@@ -170,6 +174,11 @@ export default function QuickFilteringGrid({ data }) {
       });
     });
     setRows(filteredRows);
+  };
+
+  const handleDialogClose = () => {
+    setIsFieldToDetailOpen(false);
+    setIsDetailOpen(!isDetailOpen);
   };
 
   React.useEffect(() => {
@@ -192,9 +201,17 @@ export default function QuickFilteringGrid({ data }) {
           components={{ Toolbar: QuickSearchToolbar }}
           rows={rows}
           columns={columns}
+          onCellClick={(params, event) => {
+            event.defaultMuiPrevented = true;
+            if (params.field === "fullname" || params.field === "email") {
+              setIsFieldToDetailOpen(true);
+            }
+          }}
           onRowClick={(item) => {
-            setAdminSelected(item);
-            setIsAddingOpen(!isAddingOpen);
+            setUserSelected(item);
+            if (isFieldToDetailOpen) {
+              setIsDetailOpen(!isDetailOpen);
+            }
           }}
           componentsProps={{
             toolbar: {
@@ -206,10 +223,10 @@ export default function QuickFilteringGrid({ data }) {
           getRowId={(row) => row._id}
         />
       </Box>
-      <AdminDetail
-        admin={adminSelected}
-        openDialog={isAddingOpen}
-        handleDialogClose={() => setIsAddingOpen(!isAddingOpen)}
+      <UserDetail
+        userSelected={userSelected}
+        openDialog={isDetailOpen}
+        handleDialogClose={handleDialogClose}
       />
     </>
   );
