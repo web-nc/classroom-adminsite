@@ -5,4 +5,6 @@ const router = express.Router();
 
 router.get("/", courseController.getCourses);
 
+router.delete("/:id", courseController.deleteCourse);
+
 export default router;

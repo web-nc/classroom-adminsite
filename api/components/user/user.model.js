@@ -18,7 +18,10 @@ const User = new mongoose.Schema({
     enum: ["Nam", "Nữ", "Khác"],
   },
   changePasswordToken: String,
-  createdDate: Date,
+  createdDate: {
+    type: Date,
+    default: () => Date.now(),
+},
   isBanned: {
     type: Boolean,
     default: false

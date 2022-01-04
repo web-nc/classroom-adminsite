@@ -8,6 +8,10 @@ import format from "date-fns/format";
 import PropTypes from "prop-types";
 import * as React from "react";
 import ClassDetail from "./ClassDetail";
+import DeleteIcon from '@mui/icons-material/Delete';
+import { deleteCourse } from "../../services/course";
+import { toast } from "react-toastify";
+import DeleteCourseDialog from "./DeleteCourseDialog";
 
 function escapeRegExp(value) {
   return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
@@ -73,63 +77,14 @@ const dateFormatter = (params) => {
   return format(date, "dd/MM/yyyy");
 };
 
-const columns = [
-  {
-    field: "id",
-    hide: true,
-  },
-  {
-    field: "name",
-    headerName: "Tên lớp",
-    flex: 1,
-    minWidth: 250,
-    align: "left",
-    headerAlign: "center",
-    disableColumnMenu: true,
-  },
-  {
-    field: "owner",
-    headerName: "Người tạo",
-    flex: 0.3,
-    minWidth: 180,
-    align: "center",
-    headerAlign: "center",
-    disableColumnMenu: true,
-  },
-  {
-    field: "amountStudent",
-    headerName: "Số sinh viên",
-    width: 120,
-    align: "center",
-    headerAlign: "center",
-    disableColumnMenu: true,
-  },
-  {
-    field: "amountTeacher",
-    headerName: "Số giáo viên",
-    width: 120,
-    align: "center",
-    headerAlign: "center",
-    disableColumnMenu: true,
-  },
-  {
-    field: "createdDate",
-    headerName: "Ngày tạo",
-    width: 220,
-    align: "center",
-    headerAlign: "center",
-    disableColumnMenu: true,
-    valueFormatter: dateFormatter,
-  },
-];
-
-export default function QuickFilteringGrid({ data }) {
+export default function QuickFilteringGrid({ data, handleRemoveData }) {
   const [isDetailOpen, setIsDetailOpen] = React.useState(false);
   const [isFieldToDetailOpen, setIsFieldToDetailOpen] = React.useState(false);
 
   const [searchText, setSearchText] = React.useState("");
   const [rows, setRows] = React.useState(data);
   const [classSelected, setClassSelected] = React.useState({});
+  const [openDeleteCourseDialog, setOpenDeleteCourseDialog] = React.useState(false);
 
   const requestSearch = (searchValue) => {
     setSearchText(searchValue);
@@ -147,6 +102,86 @@ export default function QuickFilteringGrid({ data }) {
     setIsDetailOpen(!isDetailOpen);
   };
 
+  const handleDeleteCourse = (params) => {
+    deleteCourse(params.row?._id).then((res) => {
+      if (res.status === 202) return toast.warning(res.data.message);
+      if (res.status === 200) {
+        toast.success(res.data.message);
+        handleRemoveData(res.data.courseIdDeleted);
+      }
+    }).catch(err => {
+      if (err) console.log(err);
+    })
+    setOpenDeleteCourseDialog(false);
+  };
+
+  const handleOpenDeleteCourseDialog = () => {
+    setOpenDeleteCourseDialog(true);
+  };
+
+  const columns = [
+    {
+      field: "id",
+      hide: true,
+    },
+    {
+      field: "name",
+      headerName: "Tên lớp",
+      flex: 1,
+      minWidth: 250,
+      align: "left",
+      headerAlign: "center",
+      disableColumnMenu: true,
+    },
+    {
+      field: "owner",
+      headerName: "Người tạo",
+      flex: 0.3,
+      minWidth: 180,
+      align: "center",
+      headerAlign: "center",
+      disableColumnMenu: true,
+    },
+    {
+      field: "amountStudent",
+      headerName: "Số sinh viên",
+      width: 120,
+      align: "center",
+      headerAlign: "center",
+      disableColumnMenu: true,
+    },
+    {
+      field: "amountTeacher",
+      headerName: "Số giáo viên",
+      width: 120,
+      align: "center",
+      headerAlign: "center",
+      disableColumnMenu: true,
+    },
+    {
+      field: "createdDate",
+      headerName: "Ngày tạo",
+      width: 220,
+      align: "center",
+      headerAlign: "center",
+      disableColumnMenu: true,
+      valueFormatter: dateFormatter,
+    },
+    {
+      field: "actions",
+      headerName: "Xóa",
+      width: 90,
+      align: "center",
+      headerAlign: "center",
+      disableColumnMenu: true,
+      renderCell: (params) => (
+        <IconButton color="warning" onClick={() => handleOpenDeleteCourseDialog(params)}>
+          <DeleteIcon />
+        </IconButton>
+      ),
+    }
+  ];
+  
   React.useEffect(() => {
     setRows(data);
   }, [data]);
@@ -194,6 +229,7 @@ export default function QuickFilteringGrid({ data }) {
         openDialog={isDetailOpen}
         handleDialogClose={handleDialogClose}
       />
+      <DeleteCourseDialog openDialog={openDeleteCourseDialog} setOpenDialog={isOpened => setOpenDeleteCourseDialog(isOpened)} handleExecute={() => handleDeleteCourse(classSelected)} />
     </>
   );
 }
