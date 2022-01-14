@@ -69,7 +69,7 @@ QuickSearchToolbar.propTypes = {
 };
 
 const getFullName = (params) => {
-  return `${params.row.firstname || ""} ${params.row.lastname || ""}`;
+  return `${params.row.lastname || ""} ${params.row.firstname || ""}`;
 };
 
 const dateFormatter = (params) => {

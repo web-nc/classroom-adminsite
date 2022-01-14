@@ -24,18 +24,49 @@ function AddAdmin({ addAdminData }) {
   const [password, setPassword] = React.useState("");
   const [submit, setSubmit] = React.useState(false);
 
+  const checkEmail = (email) => {
+    let re =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (re.test(email)) {
+      return true;
+    }
+    return false;
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     // const dataForm = new FormData(event.currentTarget);
-    addAdmin({ email, password, firstname: firstName, lastname: lastName, gender }).then((res) => {
-      if (res.status !== 200) return;
+    if (checkEmail(email)) {
+      addAdmin({
+        email,
+        password,
+        firstname: firstName,
+        lastname: lastName,
+        gender,
+      })
+        .then((res) => {
+          if (res.status !== 200) return;
 
-      toast.success(res.data.message);
-      // eslint-disable-next-line no-console
-      const row = res.data.newAdmin;
-      addAdminData(row);
-    });
-    setSubmit(!submit);
+          toast.success(res.data.message);
+          // eslint-disable-next-line no-console
+          const row = res.data.newAdmin;
+          addAdminData(row);
+        })
+        .catch((err) => {
+          if (err) {
+            toast.error("Tạo tài khoản không thành công!");
+          }
+        });
+      //reset
+      setSubmit(!submit);
+      setGender("");
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setPassword("");
+    } else {
+      toast.warning("Email không hợp lệ!");
+    }
   };
 
   return (
@@ -49,14 +80,20 @@ function AddAdmin({ addAdminData }) {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-            }}>
+            }}
+          >
             <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
               <AdminPanelSettingsOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
               Tạo quản trị viên
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+            <Box
+              component="form"
+              noValidate
+              onSubmit={handleSubmit}
+              sx={{ mt: 3 }}
+            >
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -94,7 +131,8 @@ function AddAdmin({ addAdminData }) {
                     value={gender}
                     onChange={(e) => {
                       setGender(e.target.value);
-                    }}>
+                    }}
+                  >
                     {genders.map((gender, index) => (
                       <MenuItem key={index} value={gender}>
                         {gender}
@@ -128,7 +166,12 @@ function AddAdmin({ addAdminData }) {
                   />
                 </Grid>
               </Grid>
-              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
                 Tạo
               </Button>
             </Box>
