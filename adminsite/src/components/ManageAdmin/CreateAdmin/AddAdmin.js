@@ -36,7 +36,9 @@ function AddAdmin({ addAdminData }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     // const dataForm = new FormData(event.currentTarget);
-    if (checkEmail(email)) {
+    if (!checkEmail(email)) {
+      toast.warning("Email không hợp lệ!");
+    } else if (password !== "" && lastName !== "" && firstName !== "") {
       addAdmin({
         email,
         password,
@@ -54,7 +56,7 @@ function AddAdmin({ addAdminData }) {
         })
         .catch((err) => {
           if (err) {
-            toast.error("Tạo tài khoản không thành công!");
+            toast.warning("Tạo tài khoản không thành công!");
           }
         });
       //reset
@@ -65,7 +67,7 @@ function AddAdmin({ addAdminData }) {
       setEmail("");
       setPassword("");
     } else {
-      toast.warning("Email không hợp lệ!");
+      toast.warning("Chưa điền đủ thông tin!");
     }
   };
 

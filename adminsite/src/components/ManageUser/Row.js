@@ -160,7 +160,6 @@ const columns = [
 ];
 
 export default function QuickFilteringGrid({ data }) {
-  const [MSSV, setMSSV] = React.useState("");
   const [isDetailOpen, setIsDetailOpen] = React.useState(false);
   const [isFieldToDetailOpen, setIsFieldToDetailOpen] = React.useState(false);
 
@@ -190,36 +189,49 @@ export default function QuickFilteringGrid({ data }) {
     setRows(data);
   }, [data]);
 
-  const checkStudentIDExist = (studentID) => {
+  const getOldStudentID = (userID) => {
+    // let result = "";
+    rows.map((user) => {
+      if (user._id === userID) {
+        return user.studentID;
+      }
+    });
+  };
+
+  const checkStudentIDExist = (userID, studentID) => {
     let result = false;
-    data.map((user) => {
-      if (user.studentID === studentID) {
+    rows.map((user) => {
+      if (
+        studentID !== "" &&
+        user.studentID === studentID &&
+        user._id !== userID
+      ) {
         result = true;
       }
     });
     return result;
   };
 
-  const getOldStudentID = (userID) => {
-    // let result = "";
-    data.map((user) => {
-      if (user._id === userID) {
-        // editRowData.studentID.value
-        setMSSV(user.studentID);
+  const updateData = (userId, studentID) => {
+    const newRows = [...rows];
+    newRows.map((user) => {
+      if (user._id === userId) {
+        user.studentID = studentID;
       }
     });
+    setRows(newRows);
   };
 
   const handleEditRowsModelChange = React.useCallback(
     (model) => {
       const editedIds = Object.keys(model);
-      // model[editedIds[0]].studentID.value = "181";
-      // if (!checkStudentIDExist(editRowData.studentID.value) === false) {
-      //   toast.warning("MSSV đã tồn tại!");
-      //   return;
-      // }
       //userID: console.log(editedIds[0]);
-      getOldStudentID(editedIds[0]);
+
+      // const userId = editedIds[0];
+      // console.log(model[userID]);
+      // console.log(userID);
+
+      const MSSV = getOldStudentID(editedIds[0]);
       // user stops editing when the edit model is empty
       if (editedIds.length === 0) {
         // console.log(JSON.stringify(editRowData, null, 4));
@@ -238,15 +250,28 @@ export default function QuickFilteringGrid({ data }) {
             });
           }
         } else {
-          if (!checkStudentIDExist(editRowData.studentID.value)) {
-            setMSSV(editRowData.studentID.value);
-            updateStudentID(userID, editRowData.studentID.value).then((res) => {
+          const checkMSSV = updateStudentID(userID, editRowData.studentID.value)
+            .then((res) => {
               if (res.status !== 200) return;
               toast.success(res.data.message);
+              updateData(userID, editRowData.studentID.value);
+              return true;
+            })
+            .catch((err) => {
+              if (err.response.status === 401) {
+                toast.warning(err.response.data.message);
+              }
+              return false;
             });
-          } else {
-            toast.warning("MSSV đã tồn tại!");
-            model[editedIds[0]].studentID.value = MSSV;
+
+          checkMSSV.then((token) => {
+            if (!token) {
+              // console.log(editRowsModel[userID].studentID.value);
+              // console.log(MSSV);
+            }
+          });
+          if (checkStudentIDExist(userID, editRowData.studentID.value)) {
+            editRowsModel[editedIds[0]].studentID.value = MSSV;
           }
         }
 

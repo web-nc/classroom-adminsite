@@ -57,17 +57,43 @@ export default {
 
   updateStudentID: (req, res) => {
     const userId = req.params.userId;
-    User.findByIdAndUpdate(userId, { studentID: req.body.studentID }).exec(
-      (err, user) => {
-        if (err) {
-          return res.status(500).json(err);
+    const studentID = req.body.studentID;
+    User.find({ studentID: studentID })
+      .lean()
+      .exec(async (error, result) => {
+        if (error) {
+          return res.status(500).json(error);
+        }
+        let check = false; //check có phải chính nó không
+        if (result.length === 1) {
+          if (JSON.parse(JSON.stringify(result[0]._id)) === userId) {
+            check = true;
+          }
         }
 
-        if (!user) {
-          return res.status(202).json({ message: "Tài khoản không tồn tại" });
+        if (studentID !== "" && check === false) {
+          if (result.length >= 1) {
+            return res
+              .status(401)
+              .json({ message: "Mã số sinh viên đã tồn tại" });
+          }
         }
-        return res.status(200).json({ message: "Cập nhật MSSV thành công" });
-      }
-    );
+
+        User.findByIdAndUpdate(userId, { studentID: studentID }).exec(
+          (err, user) => {
+            if (err) {
+              return res.status(500).json(err);
+            }
+            if (!user) {
+              return res
+                .status(202)
+                .json({ message: "Tài khoản không tồn tại" });
+            }
+            return res
+              .status(200)
+              .json({ message: "Cập nhật MSSV thành công" });
+          }
+        );
+      });
   },
 };
