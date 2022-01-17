@@ -1,25 +1,22 @@
-import createError from "http-errors";
-import express from "express";
-import path from "path";
 import cookieParser from "cookie-parser";
-import logger from "morgan";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-import mongoose from "mongoose";
 import cors from "cors";
 import * as dotenv from "dotenv";
+import express from "express";
+import createError from "http-errors";
+import mongoose from "mongoose";
+import logger from "morgan";
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
+import adminRouter from "./components/admin/admin.route.js";
+import authRouter from "./components/auth/auth.route.js";
+import courseRouter from "./components/course/course.route.js";
+import userRouter from "./components/user/user.route.js";
+import passport from "./modules/passport/index.js";
+import indexRouter from "./routes/index.js";
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
-import passport from "./modules/passport/index.js";
-import indexRouter from "./routes/index.js";
-import adminRouter from "./components/admin/admin.route.js";
-import authRouter from "./components/auth/auth.route.js";
-import userRouter from "./components/user/user.route.js";
-import courseRouter from "./components/course/course.route.js";
-import insert from "./insert.js";
 
 const app = express();
 
@@ -40,11 +37,7 @@ mongoose.connect(
   }
 );
 
-const whitelist = [
-  "https://midterm-classroom-app.netlify.app",
-  "http://localhost:3001",
-  "https://btn01-app.herokuapp.com",
-];
+const whitelist = ["http://localhost:3003"];
 
 app.use(
   cors({
@@ -61,9 +54,17 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/auth", authRouter);
-app.use("/admin", passport.authenticate("jwt", { session: false }), adminRouter);
+app.use(
+  "/admin",
+  passport.authenticate("jwt", { session: false }),
+  adminRouter
+);
 app.use("/user", passport.authenticate("jwt", { session: false }), userRouter);
-app.use("/course", passport.authenticate("jwt", { session: false }), courseRouter);
+app.use(
+  "/course",
+  passport.authenticate("jwt", { session: false }),
+  courseRouter
+);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

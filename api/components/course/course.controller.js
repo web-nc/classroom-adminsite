@@ -22,8 +22,11 @@ export default {
           course.teachers = teachers.map((teacher) => ({
             name: teacher.lastname + " " + teacher.firstname,
           }));
+          course.teachers.push({
+            name: owner.lastname + " " + owner.firstname,
+          });
           course.amountStudent = students.length;
-          course.amountTeacher = teachers.length;
+          course.amountTeacher = teachers.length + 1;
           return course;
         });
         Promise.all(newCourses).then((result) => {
@@ -43,7 +46,8 @@ export default {
       if (err) return res.status(500).json(err);
 
       // if course does not exist
-      if (!(course && course._id)) return res.status(202).json({ message: "Lớp học không tồn tại" });
+      if (!(course && course._id))
+        return res.status(202).json({ message: "Lớp học không tồn tại" });
 
       // from course's _id field we can track down all assignments have a "relationship" to ditch off it
       // then we can remove grades, reviews by the same way with assignments' _id
@@ -54,7 +58,10 @@ export default {
       });
       await Assignment.deleteMany({ course: course._id });
 
-      return res.status(200).json({ courseIdDeleted: course._id, message: "Đã xóa thành công lớp học" });
+      return res.status(200).json({
+        courseIdDeleted: course._id,
+        message: "Đã xóa thành công lớp học",
+      });
     });
   },
 };

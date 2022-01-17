@@ -160,6 +160,7 @@ const columns = [
 ];
 
 export default function QuickFilteringGrid({ data }) {
+  const [MSSV, setMSSV] = React.useState("");
   const [isDetailOpen, setIsDetailOpen] = React.useState(false);
   const [isFieldToDetailOpen, setIsFieldToDetailOpen] = React.useState(false);
 
@@ -189,16 +190,41 @@ export default function QuickFilteringGrid({ data }) {
     setRows(data);
   }, [data]);
 
+  const checkStudentIDExist = (studentID) => {
+    let result = false;
+    data.map((user) => {
+      if (user.studentID === studentID) {
+        result = true;
+      }
+    });
+    return result;
+  };
+
+  const getOldStudentID = (userID) => {
+    // let result = "";
+    data.map((user) => {
+      if (user._id === userID) {
+        // editRowData.studentID.value
+        setMSSV(user.studentID);
+      }
+    });
+  };
+
   const handleEditRowsModelChange = React.useCallback(
     (model) => {
       const editedIds = Object.keys(model);
+      // model[editedIds[0]].studentID.value = "181";
+      // if (!checkStudentIDExist(editRowData.studentID.value) === false) {
+      //   toast.warning("MSSV đã tồn tại!");
+      //   return;
+      // }
       //userID: console.log(editedIds[0]);
-
+      getOldStudentID(editedIds[0]);
       // user stops editing when the edit model is empty
       if (editedIds.length === 0) {
         // console.log(JSON.stringify(editRowData, null, 4));
         const userID = Object.keys(editRowsModel)[0];
-        console.log(userID);
+        // console.log(userID);
         if (typeof editRowData.studentID === "undefined") {
           if (editRowData.isBanned.value) {
             banUser(userID).then((res) => {
@@ -212,10 +238,16 @@ export default function QuickFilteringGrid({ data }) {
             });
           }
         } else {
-          updateStudentID(userID, editRowData.studentID.value).then((res) => {
-            if (res.status !== 200) return;
-            toast.success(res.data.message);
-          });
+          if (!checkStudentIDExist(editRowData.studentID.value)) {
+            setMSSV(editRowData.studentID.value);
+            updateStudentID(userID, editRowData.studentID.value).then((res) => {
+              if (res.status !== 200) return;
+              toast.success(res.data.message);
+            });
+          } else {
+            toast.warning("MSSV đã tồn tại!");
+            model[editedIds[0]].studentID.value = MSSV;
+          }
         }
 
         // update on api
